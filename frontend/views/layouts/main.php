@@ -10,44 +10,54 @@ use yii\bootstrap5\Breadcrumbs;
 use yii\bootstrap5\Html;
 use yii\bootstrap5\Nav;
 use yii\bootstrap5\NavBar;
-use yii\helpers\ArrayHelper;
 
 AppAsset::register($this);
 ?>
+
 <?php $this->beginPage() ?>
+
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>" class="h-100">
+
 <head>
+    <link rel="icon" href="<?= Yii::getAlias('@web') ?>/logo.png" type="image/x-icon">
+
     <meta charset="<?= Yii::$app->charset ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <?php $this->registerCsrfMetaTags() ?>
+
     <title><?= Html::encode($this->title) ?></title>
+
     <?php $this->head() ?>
 </head>
+
 <body class="d-flex flex-column h-100">
 <?php $this->beginBody() ?>
 
 <header>
     <?php
     NavBar::begin([
+        'brandLabel' => Html::img('@web/logo.png', ['alt' => 'Logo', 'style' => 'height:30px; margin-right:10px;'])
+            . Yii::t('app', 'Baishev 2029'),
+        'brandUrl' => \yii\helpers\Url::to(['site/index', 'y' => date('Y')]),
         'options' => [
-            'class' => 'navbar navbar-expand-md navbar-dark bg-dark fixed-top',
+            'class' => 'navbar navbar-expand-md navbar-dark fixed-top shadow-sm',
+            'style' => 'background-color: #3d52a0',
         ],
     ]);
 
-    $array =
-
     $menuItems = [];
     if (!Yii::$app->user->isGuest) {
-        $menuItems[] = ['label' => 'Baishev 2029', 'url' => ['/site/index']];
-        $menuItems[] = ['label' => 'Год', 'items' =>
-            ArrayHelper::map(Year::find()->orderBy(['year' => SORT_ASC])->all(), 'year',
-                function ($model){
-                    return [
-                            'label' => $model->year,
-                            'url' => ['/site/index', 'y' => $model->year]
-                    ];
-        })];
+        // Fetch all years from the database
+        $years = Year::find()->orderBy(['year' => SORT_ASC])->all();
+
+        // Loop through each year and add it as a separate item
+        foreach ($years as $model) {
+            $menuItems[] = [
+                'label' => $model->year,
+                'url' => ['/site/index', 'y' => $model->year]
+            ];
+        }
     }
 
     echo Nav::widget([
@@ -55,11 +65,12 @@ AppAsset::register($this);
         'items' => $menuItems,
     ]);
     if (Yii::$app->user->isGuest) {
-        echo Html::tag('div',Html::a('Login',['/site/login'],['class' => ['btn btn-link login text-decoration-none']]),['class' => ['d-flex']]);
+        //echo Html::tag('div',Html::a('Signup',['/site/signup'],['class' => ['btn btn-link login text-decoration-none']]),['class' => ['d-flex']]);
+        //echo Html::tag('div',Html::a('Login',['/site/login'],['class' => ['btn btn-link login text-decoration-none']]),['class' => ['d-flex']]);
     } else {
         echo Html::beginForm(['/site/logout'], 'post', ['class' => 'd-flex'])
             . Html::submitButton(
-                'Logout (' . Yii::$app->user->identity->username . ')',
+                'Шығу',
                 ['class' => 'btn btn-link logout text-decoration-none']
             )
             . Html::endForm();
@@ -77,7 +88,7 @@ AppAsset::register($this);
         <?= $content ?>
     </div>
 </main>
-
+ 
 <?php $this->endBody() ?>
 </body>
 </html>

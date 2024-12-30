@@ -101,28 +101,3 @@ a.desc:after {
 {
     text-decoration: none;
 }
-
-.cstmdrpdwnbtn {
-    overflow: hidden;
-    width: 100%;
-    text-align: start;
-    height: 50px;
-    border: 1px solid black;
-    border-radius: 10px;
-    padding: 10px; /* Add padding if needed */
-    background-color: #ede8f5;
-    white-space: nowrap; /* Prevent text wrapping */
-    text-overflow: ellipsis; /* Display ellipsis (...) for overflowed text */
-}
-
-.cstmdrpdwnitms{
-    min-height: 50px;
-    height: auto;
-    width: 100%;
-    text-decoration: none; /* Removes underline from links */
-    border-radius: 10px;
-    border: 1px solid black;
-    display: inline-block; /* Ensures that the link behaves like a block element */
-    padding: 10px; /* Add padding if needed */
-    color: black; /* Text color */
-}

@@ -2,10 +2,8 @@
 
 namespace common\models;
 
-use frontend\tests\UnitTester;
 use Yii;
 use yii\base\NotSupportedException;
-use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
@@ -15,20 +13,21 @@ use yii\web\IdentityInterface;
  * @property string $username
  * @property string $password_hash
  * @property string $auth_key
- * @property string $password
  */
 
 class User extends ActiveRecord implements IdentityInterface
 {
-    const STATUS_DELETED = 0;
-    const STATUS_INACTIVE = 9;
-    const STATUS_ACTIVE = 10;
+    public $password;
 
     public function rules()
     {
         return [
-            [['name', 'username'], 'required'],
-            [['name', 'username'], 'string']
+            ['username', 'trim'],
+            ['username', 'required'],
+            ['username', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This username has already been taken.'],
+            ['username', 'string', 'min' => 2, 'max' => 255],
+
+            ['password', 'string']
         ];
     }
 
@@ -59,15 +58,13 @@ class User extends ActiveRecord implements IdentityInterface
         }
 
         return static::findOne([
-            'password_reset_token' => $token,
-            'status' => self::STATUS_ACTIVE,
+            'password_reset_token' => $token
         ]);
     }
 
     public static function findByVerificationToken($token) {
         return static::findOne([
-            'verification_token' => $token,
-            'status' => self::STATUS_INACTIVE
+            'verification_token' => $token
         ]);
     }
 
